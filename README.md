@@ -1,1 +1,2 @@
-# Implemenation of East21 assignment from David Silver's Reinforcement Learning online course
+# Easy21
+Implemenation of Easy21 assignment from David Silver's Reinforcement Learning online course
