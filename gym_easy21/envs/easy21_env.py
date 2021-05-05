@@ -2,20 +2,13 @@ import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 import numpy as np
-from enum import Enum
+from constants import Color, Constant
 import copy
-
-
-class Color(Enum):
-    RED = 0
-    BLACK = 1
 
 
 class Easy21Env(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    CARD_HIGHEST_VALUE = 10
-    CARD_LOWEST_VALUE = 1
     COLORS = [Color.RED, Color.BLACK]
     COLORS_PROB = [1 / float(3), 2 / float(3)]
 
@@ -34,12 +27,12 @@ class Easy21Env(gym.Env):
         self.reset()
 
     def step(self, action):
-        assert action in self.action_space
+        assert action.value in self.action_space
         reward = 0
         done = False
         self.last_action = action
 
-        if action:  # hit
+        if action.value:  # hit
             self._draw_card_and_add_to_sum(is_player=True)
 
             if self._is_bust(is_player=True):
@@ -50,7 +43,7 @@ class Easy21Env(gym.Env):
             return self._get_obs(), reward, done, {}
 
         else:  # stick
-            while self.dealer_sum < 17:
+            while self.dealer_sum < 17 and self.dealer_sum > 0:
                 self._draw_card_and_add_to_sum(is_player=False)
 
             done = True
@@ -76,7 +69,7 @@ class Easy21Env(gym.Env):
         return self.player_sum, self.dealer_card
 
     def _draw_card(self):
-        value = np.random.randint(self.CARD_LOWEST_VALUE, self.CARD_HIGHEST_VALUE + 1, size=1)
+        value = np.random.randint(Constant.CARD_LOWEST_VALUE, Constant.CARD_HIGHEST_VALUE + 1)
         color = np.random.choice(self.COLORS, p=self.COLORS_PROB)
         return value, color
 
