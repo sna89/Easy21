@@ -27,12 +27,12 @@ class Easy21Env(gym.Env):
         self.reset()
 
     def step(self, action):
-        assert action.value in self.action_space
+        assert action in self.action_space
         reward = 0
         done = False
         self.last_action = action
 
-        if action.value:  # hit
+        if action:  # hit
             self._draw_card_and_add_to_sum(is_player=True)
 
             if self._is_bust(is_player=True):
@@ -43,7 +43,7 @@ class Easy21Env(gym.Env):
             return self._get_obs(), reward, done, {}
 
         else:  # stick
-            while self.dealer_sum < 17 and self.dealer_sum > 0:
+            while 17 > self.dealer_sum > 0:
                 self._draw_card_and_add_to_sum(is_player=False)
 
             done = True
@@ -80,7 +80,7 @@ class Easy21Env(gym.Env):
             return self.dealer_sum > 21 or self.dealer_sum < 1
 
     def _switch_to_bust_state(self):
-        self.player_sum = -1
+        self.player_sum = 0
 
     def _draw_card_and_add_to_sum(self, is_player):
         card_value, card_color = self._draw_card()
